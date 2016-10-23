@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todoist</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" ></head>
+  <link rel="stylesheet/less" href="/less/common.less">
+  <link rel="stylesheet/less" href="/less/page/<%=pageName%>.less">
+  <script type="text/javascript" src="/bower_components/less/dist/less.min.js"></script>
+<body>
+
+  <!--top_bar start-->
+  <% include blocks/top_bar.html %>
+  <!--top_bar end-->
+
+  <!--all_holder start-->
+  <div id="all_holder" style="margin-left: 310px;">
+
+    <!--left_menu start-->
+    <div id="left_menu">
+      <div id="close_menu_holder">
+        <a href="#" id="close_menu">
+          <img src="" width="14" height="14" class="cmp_menu_close">关闭菜单</a>
+      </div>
+
+      <!--list_holder start-->
+      <% include blocks/list_holder.html %>
+      <!--list_holder start-->
+
+    </div>
+    <!--left_menu end-->
+    
+    <!--content start-->
+    <div id="content" class="main_content">
+      <div id="editor">
+        <div id="agenda_view">
+          <% include blocks/day_holder.html %>
+        </div>
+      </div>
+    </div>
+    <!--content end-->
+  </div>
+  <!--all_holder end-->
+
+</body>
+</html>
