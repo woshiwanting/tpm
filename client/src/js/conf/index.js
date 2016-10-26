@@ -1,5 +1,7 @@
-/*
-@file 配置js
-@author tshawn
-*/
-console.log('index');
+/**
+ * @description require配置
+ * @time 2016.10.26 10:56
+ */
+require.config({
+  baseUrl: '/js'
+});

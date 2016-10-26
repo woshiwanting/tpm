@@ -10,7 +10,7 @@
 <body>
 
   <!--top_bar start-->
-  <% include blocks/top_bar.html %>
+  <div id="top_bar"></div>
   <!--top_bar end-->
 
   <!--all_holder start-->
@@ -24,7 +24,7 @@
       </div>
 
       <!--list_holder start-->
-      <% include blocks/list_holder.html %>
+      <div id="list_holder"></div>
       <!--list_holder start-->
 
     </div>
@@ -32,15 +32,13 @@
     
     <!--content start-->
     <div id="content" class="main_content">
-      <div id="editor">
-        <div id="agenda_view">
-          <% include blocks/day_holder.html %>
-        </div>
-      </div>
+      <div id="editor"></div>
     </div>
     <!--content end-->
+
   </div>
   <!--all_holder end-->
-
+  
+  <script src="/js/page/index.js"></script>
 </body>
 </html>

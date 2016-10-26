@@ -17,13 +17,14 @@ var redisStore = require('koa-redis');
 var tclog = require('./libs/tclog.js');
 var genLogid = require('./libs/logid').genLogid;
 var api = require('./libs/api');
+var browserify = require('./libs/browserify');
 
 app.keys = ['tiancai', 'xiaoguang'];
 
-app.use(function *(next) {
-    if(this.url == '/favicon.ico'){
+app.use(function*(next) {
+    if (this.url == '/favicon.ico') {
         //favicon return
-    }else{
+    } else {
         yield next;
     }
 })
@@ -31,16 +32,22 @@ app.use(function *(next) {
 // 设置模板
 view(app, config.view);
 
+//使用browserify打包
+if (runEnv === 'dev') {
+    app.use(browserify());
+}
+
 // 设置api
 api(app);
 app.use(require('koa-static')(config.statics.staticRoute));
+
 app.use(bodyParser());
 tclog.init();
 // live-reload代理中间件
 if (runEnv === 'dev') {
-    app.use(function *(next) {
+    app.use(function*(next) {
         yield next;
-        if(this.type === 'text/html') {
+        if (this.type === 'text/html') {
             this.body += yield this.toHtml('reload');
         }
     });
@@ -60,33 +67,42 @@ app.redisIsOk = false;
 // }));
 
 
-app.use(function *(next) {
+app.use(function*(next) {
     var logid = genLogid();
     this.req.logid = logid;
-    if(app.redisIsOk){
-        var tiancainame = this.cookies.get('tiancainame',{ signed: true });
-        try{
+    if (app.redisIsOk) {
+        var tiancainame = this.cookies.get('tiancainame', {
+            signed: true
+        });
+        try {
             var userInfo = this.session[tiancainame];
             this.userInfo = userInfo;
-        }
-        catch(e){
+        } catch (e) {
             this.userInfo = null;
         }
-    }else{
+    } else {
         this.userInfo = null;
     }
-    
-    tclog.notice({logid:logid,type:'pv',method:this.req.method,url:this.url,userInfo:this.userInfo})
+
+    tclog.notice({
+        logid: logid,
+        type: 'pv',
+        method: this.req.method,
+        url: this.url,
+        userInfo: this.userInfo
+    })
     yield next;
 });
 
 // 设置路由
 router(app);
 
-app.use(function *error(next) {
+app.use(function* error(next) {
     if (this.status === 404) {
-        yield this.render('error/404',{noWrap:true});
-    }else{
+        yield this.render('error/404', {
+            noWrap: true
+        });
+    } else {
         yield next;
     }
 });
