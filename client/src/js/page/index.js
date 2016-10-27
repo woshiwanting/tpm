@@ -2,8 +2,12 @@
  * @description 入口文件
  * @time 2016.10.26 10:56
  */
-var Backbone = require('backbone');
-var _ = require('backbone/node_modules/underscore');
+// var Backbone = require('backbone');
+// var _ = require('backbone/node_modules/underscore');
+
+window.Backbone = require('backbone');
+window._ = require('backbone/node_modules/underscore');
+window.$ = require('jquery');
 
 var topBarView = require('../view/top_bar_view.js');
 var listHolderView = require('../view/list_holder_view.js');

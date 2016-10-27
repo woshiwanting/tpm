@@ -4,8 +4,8 @@
  */
 
 var dayHolderTpl = require('../tpl/day_holder.tpl');
-var Backbone = require('backbone');
-var _ = require('backbone/node_modules/underscore');
+// var Backbone = require('backbone');
+// var _ = require('backbone/node_modules/underscore');
 
 var dayHolderView = Backbone.View.extend({
   el: '#editor',

@@ -4,8 +4,8 @@
  */
 
 var topBarTpl = require('../tpl/top_bar.tpl');
-var Backbone = require('backbone');
-var _ = require('backbone/node_modules/underscore');
+// var Backbone = require('backbone');
+// var _ = require('backbone/node_modules/underscore');
 
 var topBarView = Backbone.View.extend({
   el: '#top_bar',
