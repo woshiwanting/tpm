@@ -17,10 +17,9 @@ var projectInstanceView = Backbone.View.extend({
     this.addTaskView = new addTaskView();
   },
   showAddTaskPanel: function() {
-    var innerHtml = this.addTaskView.render('#J-taskItem');
+    // var innerHtml = this.addTaskView.render('#J-taskItem');
   },
   render: function() {
-    var self = this;
     var tpl = _.template(this.template)();
     this.$el.html(tpl);
   }

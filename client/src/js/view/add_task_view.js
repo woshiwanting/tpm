@@ -19,12 +19,14 @@ var addTaskView = Backbone.View.extend({
     'click .submit_btn': 'addTask',
     'click #J-addTask': 'addTask',
     'click .input_due_date': 'showDpView',
-    'mouseover .manager:not(.drop_item)': 'showDrapView'
+    'mouseover .manager': 'showDrapView'
   },
   template: addTaskTpl,
   initialize: function() {
     //任务编辑器选择器
     this.editorSelector = '.manager';
+    //存放编辑器的容器
+    this.targetContainer = '#J-taskItem';
     //日期选择
     this.dpContainerView = new dpContainerView;
     //拖拽组件
@@ -44,11 +46,28 @@ var addTaskView = Backbone.View.extend({
     this.drapAndDropView.render(this.editorSelector);
   },
   //添加单项任务
-  addTask: function() {
-    var title = $('#J-richtext_editor').text();
+  addTask: function(e) {
+    var $editorInput = $('#J-richtext_editor');
+    var title = $editorInput.text();
+    var $target = $(e.currentTarget);
+    //是否是编辑器的添加任务按钮
+    var isEditorSubmit = $target.hasClass('submit_btn');
 
+    //还未创建编辑器
+    if (!$editorInput.length) {
+      return this.render(this.targetContainer, true);
+    }
+
+    //还没输入任务内容
     if (!$.trim(title).length) {
-      return;
+
+      //点击编辑器的添加任务
+      if (isEditorSubmit) {
+        return;
+      }
+
+      //点击列表中的添加任务，重新创建
+      return this.render(this.targetContainer, true);
     }
 
     //uuid
@@ -57,7 +76,8 @@ var addTaskView = Backbone.View.extend({
     var taskItemHtml = _.template(taskItemTpl)({title: title, indent: this.indent, id: this.$id});
     
     this.$container.find(this.editorSelector).before(taskItemHtml);
-    this.replace();
+
+    isEditorSubmit ? this.replace() : this.render(this.targetContainer, true);
   },
   //销毁添加任务编辑器
   destroy: function(e) {
@@ -67,16 +87,14 @@ var addTaskView = Backbone.View.extend({
     this.state.being = false;
   },
   //添加任务编辑器
-  render: function(selector, data) {
-    var tpl = _.template(this.template)(data);
-    this.$container = $(selector);
-    
-    if (this.state.being) {
-      return this;
-    }
+  render: function(selector, isForcedRender) {
+    var editorTpl = _.template(this.template)();
 
-    this.$container.append(tpl);
-    this.state.being = true;
+    this.$container = selector ? $(selector) : this.$container;
+    this.$el.find(this.editorSelector).remove();
+    this.drapAndDropView.setState({being: false});
+    this.$container.append(editorTpl);
+
     return this;
   },
   //更新任务编辑器

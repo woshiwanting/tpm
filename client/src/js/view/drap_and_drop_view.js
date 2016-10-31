@@ -16,6 +16,10 @@ var drapAndDropView = Backbone.View.extend({
     'mouseout .drag_and_drop_handler': 'destroy'
   },
   template: drapAndDropTpl,
+  //修改状态
+  setState: function(state) {
+    $.extend(this.state, state);
+  },
   initialize: function() {
     this.onDragClass = 'on_drag';
     this.placeholderSelector = '.drop_item';
