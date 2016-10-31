@@ -4,16 +4,17 @@
  */
 
 var listHolderTpl = require('../tpl/list_holder.tpl');
-// var Backbone = require('backbone');
-// var _ = require('backbone/node_modules/underscore');
 
 var listHolderView = Backbone.View.extend({
   el: '#list_holder',
-  events: {},
+  events: {
+    
+  },
   template: listHolderTpl,
-  initialize: function() {},
+  initialize: function() {
+    
+  },
   render: function() {
-    var self = this;
     var tpl = _.template(this.template)();
     this.$el.html(tpl);
   }

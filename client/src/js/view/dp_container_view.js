@@ -11,7 +11,8 @@ var dpContainerView = Backbone.View.extend({
     'click': 'destroy',
     'mouseover .dp__calDay': 'addHoverClass',
     'mouseout .dp__calDay': 'removeHoverClass',
-    'click .cmp_10_arrow_left': 'showPreMonth',
+    'click .dp__calDay': 'selectDate',
+    'click .cmp_10_arrow_left': 'showPrevMonth',
     'click .cmp_9_arrow_right': 'showNextMonth'
   },
   template: dpContainerTpl,
@@ -24,7 +25,11 @@ var dpContainerView = Backbone.View.extend({
       now_year: today.getFullYear(),
       now_month: today.getMonth(),
       now_date: today.getDate(),
-      being: false //日历选择器是否存在
+      now_hour: today.getHours(),
+      now_minute: today.getMinutes(),
+      now_second: today.getSeconds(),
+      being: false, //日历选择器是否存在
+      dp_old_day: 'dp_old_day' //今天之前日期的显示样式
     };
   },
   //增加hover效果
@@ -42,15 +47,27 @@ var dpContainerView = Backbone.View.extend({
     var $target = $(e.target);
     var condition = !$target.parents('.dp_container').length 
       && $target.get(0) !== $('.input_due_date').get(0)
-      && $target.get(0) !== $('.dp_container').get(0);
+      && $target.get(0) !== $('.dp_container').get(0)
+      || $target.hasClass('dp__calDay');
 
     if (condition) {
       this.$el.find('.dp_container').remove();
       this.data.being = false;
     }
   },
+  //选择日期
+  selectDate: function(e) {
+    var $target = $(e.currentTarget);
+    var axis = $target.attr('axis');
+    var date = axis.replace(/(\d{4})\|(\d{1,})\|(\d{1,})/, '$1年$2月$3日');
+    $('.input_due_date').val(date).attr('axis', axis);
+  },
+  //显示选中日期的面板
+  showSelectedDatePanel: function() {
+    
+  },
   //显示上个月
-  showPreMonth: function(e) {
+  showPrevMonth: function(e) {
 
     if (this.data.currentMonth == 0) {
       this.data.currentMonth = 11;
@@ -59,10 +76,11 @@ var dpContainerView = Backbone.View.extend({
       this.data.currentMonth -= 1;
     }
 
-    var preDate = new Date(this.data.currentYear, this.data.currentMonth, 1);
+    // var prevDate = new Date(this.data.currentYear, this.data.currentMonth, this.data.now_date, this.data.now_hour, this.data.now_minute, this.data.now_second);
+    var prevDate = new Date(this.data.currentYear, this.data.currentMonth, 1);
     this.data.being = false;
 
-    var innerHtml = $(this.render(null, preDate, true)).find('table');
+    var innerHtml = $(this.render(null, prevDate, true)).find('table');
     this.$el.find('.dp_container table').replaceWith(innerHtml);
 
     e.stopPropagation();
@@ -77,6 +95,7 @@ var dpContainerView = Backbone.View.extend({
       this.data.currentMonth += 1;
     }
 
+    // var nextDate = new Date(this.data.currentYear, this.data.currentMonth, this.data.now_date, this.data.now_hour, this.data.now_minute, this.data.now_second);
     var nextDate = new Date(this.data.currentYear, this.data.currentMonth, 1);
     this.data.being = false;
 
@@ -90,6 +109,7 @@ var dpContainerView = Backbone.View.extend({
   //isDisableRender 是否禁用渲染
   render: function(style, date, isDisableRender) {
     var tpl = _.template(this.template);
+    // date = date || new Date(this.data.now_year, this.data.now_month, this.data.now_date, this.data.now_hour, this.data.now_minute, this.data.now_second);
     date = date || new Date();
 
     if (this.data.being) {
@@ -98,7 +118,7 @@ var dpContainerView = Backbone.View.extend({
 
     var year = date.getFullYear();
     var month = date.getMonth();
-    var tbody = this.getTbody(year, month);
+    var tbody = this.getTbody(year, month, date);
 
     this.data = _.extend(this.data, {
       currentMonth: month,
@@ -128,15 +148,18 @@ var dpContainerView = Backbone.View.extend({
     return new Date(year, month + 1, 0).getDate();
   },
   //返回日历主体
-  getTbody: function(year, month) {
+  getTbody: function(year, month, newDate) {
     var firstDay = this.getFirstDay(year, month);
     var days = this.getTotalDays(year, month);
     //上个月总天数
-    var preDays = this.getTotalDays(year, month - 1);
+    var prevDays = this.getTotalDays(year, month - 1);
 
     var theadView = ['<tr>'];
     var tdViews = ['<tr>'];
     var tdTpl = '<td class="dp__calDay {dp_old_day}" axis="{axis}">{date}</td>';
+
+    //创建一个只有年月日的当前日期 用于区分昨天
+    var today = new Date(this.data.now_year, this.data.now_month, this.data.now_date);
 
     //日历头部
     for (var m = 0; m < 7; m++) {
@@ -154,26 +177,54 @@ var dpContainerView = Backbone.View.extend({
       var date = i - firstDay + 1;
       var dp_old_day = '';
 
+      //更新月
+      var date_month = i >= firstDay ? month : month - 1;
+      date_month = i >= days + firstDay ? date_month + 1 : date_month;
+
+      //更新年
+      var date_year = year;
+
+      //跨年 年、月处理
+      if (date_month == 12) {
+        date_month = 0;
+        date_year += 1;
+      }
+
+      if (date_month == -1) {
+        date_month = 11;
+        date_year -= 1;
+      }
+
       //上个月日期
       if (i < firstDay) {
-        date = preDays - firstDay + i + 1;
-        dp_old_day = 'dp_old_day';
+        date = prevDays - firstDay + i + 1;
+        dp_old_day = this.data.dp_old_day;
       }
 
       //下个月日期
       if (i >= days + firstDay) {
         date = i - days - firstDay + 1;
-        dp_old_day = 'dp_old_day';
+        dp_old_day = this.data.dp_old_day;
       }
 
       //新周
-      if (i % 7 == 1) {
+      if (i % 7 == 1 && i > 1) {
         tdViews.push('</tr><tr>');
+      }
+
+      //今天之前的日期添加样式
+      if (today.getTime() > new Date(date_year, date_month, date).getTime()) {
+        dp_old_day = this.data.dp_old_day;
+      }
+
+      //当前日期
+      if (today.getTime() == new Date(date_year, date_month, date).getTime()) {
+        dp_old_day = 'dp_selected dp_today';
       }
 
       tdViews.push(tdTpl
       .replace(/{dp_old_day}/g, dp_old_day)
-      .replace(/{axis}/g, [year, month + 1, i].join('|'))
+      .replace(/{axis}/g, [date_year, date_month + 1, date].join('|'))
       .replace(/{date}/g, date));
     }
 

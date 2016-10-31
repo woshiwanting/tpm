@@ -1,4 +1,4 @@
-<li class="task_item item_111699593 not_shared menu_clickable <%=indent%> priority_1" id="item_111699593">
+<li class="task_item <%=id%> not_shared menu_clickable <%=indent%> priority_1" id="<%=id%>">
   <div class="invisible_space"></div>
   <table cellpadding="0" cellspacing="0">
     <tbody>
