@@ -13,7 +13,7 @@ var drapAndDropView = Backbone.View.extend({
   },
   events: {
     'mousedown .drag_and_drop_handler': 'handleMousedown',
-    'mouseout .drag_and_drop_handler': 'destroy'
+    // 'mouseout .drag_and_drop_handler': 'destroy'
   },
   template: drapAndDropTpl,
   //修改状态
@@ -61,6 +61,7 @@ var drapAndDropView = Backbone.View.extend({
   },
   handleMouseover: function(e) {
     var e = e || window.event;
+    var $target = $(e.target);
 
     //处理mouseover重复调用问题
     if (this.clientX == e.clientX && this.clientY == e.clientY) {
@@ -101,9 +102,9 @@ var drapAndDropView = Backbone.View.extend({
       width: width
     });
 
-    this.handleAutoScroll(e);
     this.caclPlaceholderIndent({left: left, top: top});
     this.comparePos({left: left, top: top});
+    // this.handleAutoScroll(e);
 
     document.onmouseup = $.proxy(function () {
       document.onmousemove = null;
@@ -206,6 +207,12 @@ var drapAndDropView = Backbone.View.extend({
   },
   //自动滚动
   handleAutoScroll: function(e) {
+    var topBarHeight = $('#top_bar').outerHeight(true);
+    var clientHeight = $(window).height();
+
+    var top = this.$placeholder.offset().top;
+    var height = this.$placeholder.outerHeight(true);
+
     if (this.scroll_interval) {
       clearInterval(this.scroll_interval);
       this.scroll_interval = null;
@@ -213,9 +220,14 @@ var drapAndDropView = Backbone.View.extend({
 
     //Positive co-ordinates will scroll to the right and down the page. Negative values will scroll to the left and up the page.
     this.scroll_interval = setInterval(function() {
-      var scrollTop = $(document).scrollTop();
-      this.offset_top = this.clientY > this.x ? 6 : -6;
-      window.scrollBy(0, this.offset_top);
+      var scrollTop = $(window).scrollTop();
+      if (top < clientHeight - topBarHeight + scrollTop) {
+        window.scrollBy(0, -6);
+      }
+
+      if (top + height > clientHeight + scrollTop) {
+        window.scrollBy(0, 6);
+      }
     }.bind(this), 1);
   },
   render: function(container) {
@@ -223,16 +235,16 @@ var drapAndDropView = Backbone.View.extend({
 
     this.container = $(container);
 
-    if (this.state.being) {
+    if (this.container.find('.drag_and_drop_handler').length) {
       return;
     }
 
     this.container.prepend(tpl);
-    this.state.being = true;
+    // this.state.being = true;
   },
   //销毁组件
-  destroy: function() {
-    this.$el.find('.drag_and_drop_handler').remove();
+  destroy: function($container) {
+    $container.find('.drag_and_drop_handler').remove();
     this.state.being = false;
   }
 });

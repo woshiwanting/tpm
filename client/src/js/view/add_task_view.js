@@ -19,7 +19,9 @@ var addTaskView = Backbone.View.extend({
     'click .submit_btn': 'addTask',
     'click #J-addTask': 'addTask',
     'click .input_due_date': 'showDpView',
-    'mouseover .manager': 'showDrapView'
+    'mouseover .manager': 'showDrapView',
+    'mouseover .task_item': 'showDrapView',
+    // 'mouseout .task_item': 'hideDrapView'
   },
   template: addTaskTpl,
   initialize: function() {
@@ -42,8 +44,21 @@ var addTaskView = Backbone.View.extend({
     });
   },
   //显示拖拽组件
-  showDrapView: function() {
-    this.drapAndDropView.render(this.editorSelector);
+  showDrapView: function(e) {
+    var $target = $(e.currentTarget);
+    this.drapAndDropView.render($target);
+  },
+  hideDrapView: function(e) {
+    var $currentTarget = $(e.currentTarget);
+    var $target = $(e.target);
+    
+    clearTimeout(this.dragTimer);
+    this.dragTimer = setTimeout(function() {
+      if ($target.parents('.task_item').length) {
+        this.drapAndDropView.destroy($currentTarget);
+        this.dragTimer = null;
+      }
+    }.bind(this), 200);
   },
   //添加单项任务
   addTask: function(e) {
@@ -82,8 +97,8 @@ var addTaskView = Backbone.View.extend({
   //销毁添加任务编辑器
   destroy: function(e) {
     var $ele = $(e.target);
+    this.drapAndDropView.destroy($(this.editorSelector));
     $ele.parents(this.editorSelector).remove();
-    this.drapAndDropView.destroy();
     this.state.being = false;
   },
   //添加任务编辑器
@@ -100,8 +115,8 @@ var addTaskView = Backbone.View.extend({
   //更新任务编辑器
   replace: function() {
     var tpl = _.template(this.template)();
+    this.drapAndDropView.destroy($(this.editorSelector));
     this.$el.find(this.editorSelector).remove();
-    this.drapAndDropView.destroy();
 
     var $newTaskItem = this.$el.find('#' + this.$id);
     var $placeholder = $(tpl);
