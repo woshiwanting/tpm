@@ -5447,3 +5447,71 @@ NOTICE: pid::4552 2016-11-01 10:59:03     at Object.<anonymous> (F:\tftc\tpm\app
 NOTICE: pid::4552 2016-11-01 11:00:43     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477969243525695,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
 NOTICE: pid::4552 2016-11-01 11:01:27     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477969287933403,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
 NOTICE: pid::4552 2016-11-01 11:03:08     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477969388827183,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9980 2016-11-01 11:10:07     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::9980 2016-11-01 11:37:22     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477971442814944,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9980 2016-11-01 11:39:46     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477971586170122,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9980 2016-11-01 15:21:49     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477984909767388,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9980 2016-11-01 15:37:24     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477985844619311,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9980 2016-11-01 15:41:04     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477986064657049,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9980 2016-11-01 15:44:51     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477986291454684,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9980 2016-11-01 15:56:08     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477986968278361,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9740 2016-11-01 16:02:58     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::7156 2016-11-01 16:03:03     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::7156 2016-11-01 16:03:07     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477987387428649,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9640 2016-11-01 16:05:15     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::9640 2016-11-01 16:05:17     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477987517512787,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::1204 2016-11-01 16:05:20     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::1204 2016-11-01 16:07:46     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477987666522649,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::8444 2016-11-01 16:11:49     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8444 2016-11-01 16:11:57     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477987917506127,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9524 2016-11-01 16:12:22     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::9524 2016-11-01 16:12:29     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477987949476935,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::7092 2016-11-01 16:21:55     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::1780 2016-11-01 16:22:40     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::1780 2016-11-01 16:22:43     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477988563486693,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::1780 2016-11-01 16:26:27     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477988787464505,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::7208 2016-11-01 16:26:29     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::7208 2016-11-01 16:26:37     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477988797541842,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::7980 2016-11-01 16:26:58     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::7980 2016-11-01 16:27:07     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477988827562971,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::7004 2016-11-01 16:42:10     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::7004 2016-11-01 16:42:17     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477989737634120,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::7004 2016-11-01 16:51:50     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477990310643847,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9264 2016-11-01 16:59:58     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::9264 2016-11-01 17:00:08     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477990808623963,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9224 2016-11-01 17:00:23     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::9224 2016-11-01 17:00:29     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477990829527613,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9224 2016-11-01 17:03:35     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477991015970203,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::4912 2016-11-01 17:07:53     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8332 2016-11-01 17:07:58     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8332 2016-11-01 17:08:01     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477991281633823,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::4000 2016-11-01 17:08:05     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8560 2016-11-01 17:08:38     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8560 2016-11-01 17:08:39     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477991319126888,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::4380 2016-11-01 17:10:53     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::4380 2016-11-01 17:10:59     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477991459671897,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::5388 2016-11-01 17:22:40     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::5388 2016-11-01 17:22:44     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477992164675098,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::5388 2016-11-01 17:23:13     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477992193281671,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::5388 2016-11-01 17:23:54     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477992234346902,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::2588 2016-11-01 17:26:59     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::6332 2016-11-01 17:31:48     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::2220 2016-11-01 17:32:11     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::6316 2016-11-01 17:32:52     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::6956 2016-11-01 17:33:22     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::7268 2016-11-01 17:33:28     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8404 2016-11-01 17:33:48     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8404 2016-11-01 17:33:53     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477992833763991,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::8964 2016-11-01 17:36:28     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8964 2016-11-01 17:36:36     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477992996712615,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::8644 2016-11-01 17:41:41     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::8644 2016-11-01 17:41:49     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477993309740700,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::4956 2016-11-01 17:43:46     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::4956 2016-11-01 17:43:53     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477993433760659,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::10108 2016-11-01 17:44:15     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::10108 2016-11-01 17:44:24     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477993464760286,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::9192 2016-11-01 17:44:29     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::6988 2016-11-01 17:44:43     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::6988 2016-11-01 17:44:51     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477993491791591,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
+NOTICE: pid::4736 2016-11-01 17:46:34     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:112:7) UI Server已经启动：http://127.0.0.1:8000
+NOTICE: pid::4736 2016-11-01 17:46:42     at Object.<anonymous> (F:\tftc\tpm\app\bootSrtap.js:87:11) { logid: 1477993602778713,  type: 'pv',  method: 'GET',  url: '/',  userInfo: null }
