@@ -35,6 +35,11 @@ var drapAndDropView = Backbone.View.extend({
     this.maxX = ''; //x方向的最大位置
     this.maxY = ''; //y方向的最大位置
   },
+  stopPropagation: function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    return;
+  },
   handleMousedown: function(e) {
     this.$element = $(e.currentTarget).parent();
     var className = this.$element.get(0).className;
@@ -46,36 +51,33 @@ var drapAndDropView = Backbone.View.extend({
 
     this.placeholderTpl = '<li class="' + ['drop_item', className].join(' ') + '"></li>'
 
-    this.handleDragstart(e);
+    this.handleExtraMousedown(e);
 
-    document.onmousemove = $.proxy(this.handleMouseover, this);
+    document.onmousemove = $.proxy(this.handleMousemove, this);
 
-    e.stopPropagation();
-    e.preventDefault();
+    this.stopPropagation(e);
   },
-  //mousedown附加的回调
-  handleDragstart: function(e) {
+  //鼠标按下附加回调
+  handleExtraMousedown: function(e) {
     var height = this.$element.outerHeight(true);
     var indent = this.getIndent(this.$element);
+    //占位元素
+    var placeholderEle = $(this.placeholderTpl).css({
+      height: height,
+      marginLeft: Math.max(indent - 1, 0) * this.indentUnit
+    });
 
     this.$element.addClass(this.onDragClass);
 
     //添加位置占位
     this.setMovingElePos(e);
-    this.$element.after($(this.placeholderTpl).css({height: height, marginLeft: Math.max(indent - 1, 0) * this.indentUnit}));
+    this.$element.after(placeholderEle);
+
+    this.handleMouseup();
   },
   //设置移动的位置
   setMovingElePos: function(e) {
     var e = e || window.event;
-    var $target = $(e.target);
-
-    //处理mouseover重复调用问题
-    // if (this.clientX == e.clientX && this.clientY == e.clientY) {
-    //   return;
-    // }
-
-    this.clientX = e.clientX;
-    this.clientY = e.clientY;
 
     var left = this.left + e.clientX - this.x;
     var top = this.top + e.clientY - this.y;
@@ -113,27 +115,29 @@ var drapAndDropView = Backbone.View.extend({
       top: top
     }
   },
-  handleMouseover: function(e) {
+  handleMousemove: function(e) {
     var offset = this.setMovingElePos(e);
 
     this.setPlaceholderIndent(offset);
-    this.addPlaceholder(offset);
+    this.updatePlaceholderLevel(offset);
     // this.handleAutoScroll(e);
 
-    document.onmouseup = $.proxy(function () {
+    this.handleMouseup();
+    this.stopPropagation(e);
+  },
+  //绑定mouseup
+  handleMouseup: function() {
+    document.onmouseup = function() {
       document.onmousemove = null;
 
       clearInterval(this.scroll_interval);
       this.scroll_interval = null;
       
-      this.handleMouseup();
-    }, this);
-    
-    e.stopPropagation();
-    e.preventDefault();
+      this.handleMouseupCallback();
+    }.bind(this);
   },
   //比较目标元素与最近元素位置，添加占位元素
-  addPlaceholder: function(self_offset) {
+  updatePlaceholderLevel: function(self_offset) {
     var $placeholder = this.$el.find(this.placeholderSelector);
     var placeholderHeight = $placeholder.outerHeight(true);
     var placeholder_offset = $placeholder.offset();
@@ -211,9 +215,10 @@ var drapAndDropView = Backbone.View.extend({
     
   },
   //拖动结束及释放鼠标后回调
-  handleMouseup: function() {
+  handleMouseupCallback: function() {
     this.$element.removeClass(this.onDragClass);
     this.$element.get(0).style = 'opacity:1;visibility: visible';
+    this.$placeholder = this.$placeholder || this.$el.find(this.placeholderSelector);
 
     var indent = parseInt(this.$placeholder.css('marginLeft'), 10) / this.indentUnit + 1;
     //样式限制，最多缩进5层
@@ -223,6 +228,7 @@ var drapAndDropView = Backbone.View.extend({
       return this.className.match(/(indent_\d+)/g)[0];
     }).addClass(this.indentClass);
 
+    //将拖动的单个任务移动到占位元素处
     this.$el.find(this.placeholderSelector).replaceWith(this.$element);
   },
   //自动滚动
