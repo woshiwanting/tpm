@@ -29,10 +29,12 @@ function set(app) {
 
 function setMap(ctrs) {
     router.get('/', ctrs.index.show);
-    router.get('/index', ctrs.index.show);
-    router.get('/login', ctrs.login.show);
-    router.get('/logout', ctrs.login.logout);
     router.get('/api/getTestData', ctrs.api.getTestData);
-    router.post('/login', ctrs.login.login);
+
+    router.post('/v1/api/tasks', ctrs.task.add);
+    router.put('/v1/api/tasks/:taskId', ctrs.task.update);
+    router.del('/v1/api/tasks/:taskId', ctrs.task.del);
+    router.get('/v1/api/tasks/:taskId', ctrs.task.showItemById);
+    router.get('/v1/api/tasks', ctrs.task.showAllList);
 }
 module.exports = set;

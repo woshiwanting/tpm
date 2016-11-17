@@ -57,5 +57,8 @@ module.exports = {
     redis: {
         host: '182.254.209.32',
         port: 6379
-    }
+    },
+
+    //mongo配置
+    db: 'mongodb://127.0.0.1/todolist'
 }
