@@ -11,7 +11,7 @@ var Schema = mongoose.Schema;
 
 var TaskSchema = new Schema({
   //任务唯一id
-  task_id: { type: Schema.ObjectId },
+  task_id: Schema.Types.ObjectId,
   //任务创建时间
   create_time: { type: Date, default: Date.now },
   //任务更新时间
@@ -32,7 +32,7 @@ var TaskSchema = new Schema({
   overdue: {type: Boolean, default: false}
 });
 
-TaskSchema.pre('save', function(next){
+TaskSchema.pre('save', function(next) {
   var now = new Date();
   this.update_at = now;
   next();

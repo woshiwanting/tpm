@@ -9,6 +9,8 @@ var taskItemTpl = require('../tpl/task_item.tpl');
 var dpContainerView = require('./dp_container_view.js');
 var drapAndDropView = require('./drap_and_drop_view.js');
 
+var TaskModel = require('../model/task_model.js');
+
 var addTaskView = Backbone.View.extend({
   el: '#editor',
   state: {
@@ -86,13 +88,25 @@ var addTaskView = Backbone.View.extend({
     }
 
     //uuid
-    this.$id = 'item_' + Date.now();
+    this.$id = Date.now();
     this.indent = this.getIndent();
+    this.title = title;
     var taskItemHtml = _.template(taskItemTpl)({title: title, indent: this.indent, id: this.$id});
     
     this.$container.find(this.editorSelector).before(taskItemHtml);
 
+    this.save();
+
     isEditorSubmit ? this.replace() : this.render(this.targetContainer, true);
+  },
+  //创建任务
+  save: function() {
+    var task = new TaskModel({
+      level: /\d+/.exec(this.indent)[0],
+      task_id: this.$id,
+      content: this.title
+    });
+    task.save();
   },
   //销毁添加任务编辑器
   destroy: function(e) {

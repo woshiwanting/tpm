@@ -5,6 +5,8 @@
 
 var projectInstanceTpl = require('../tpl/project_instance.tpl');
 
+var TaskModel = require('../model/task_model.js');
+
 var addTaskView = require('./add_task_view.js');
 
 var projectInstanceView = Backbone.View.extend({
@@ -15,13 +17,19 @@ var projectInstanceView = Backbone.View.extend({
   template: projectInstanceTpl,
   initialize: function() {
     this.addTaskView = new addTaskView();
+    this.model = new TaskModel;
   },
   showAddTaskPanel: function() {
     // var innerHtml = this.addTaskView.render('#J-taskItem');
   },
   render: function() {
-    var tpl = _.template(this.template)();
-    this.$el.html(tpl);
+    this.model.fetch()
+    .then(function(result) {
+      var tpl = _.template(this.template)({taskList: result});
+      this.$el.html(tpl);
+    }.bind(this), function(err) {
+
+    });
   }
 });
 

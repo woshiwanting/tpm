@@ -4,6 +4,7 @@
  */
 
 var drapAndDropTpl = require('../tpl/drap_and_drop.tpl');
+var TaskModel = require('../model/task_model.js');
 
 var drapAndDropView = Backbone.View.extend({
   el: '#editor',
@@ -228,6 +229,9 @@ var drapAndDropView = Backbone.View.extend({
       return this.className.match(/(indent_\d+)/g)[0];
     }).addClass(this.indentClass);
 
+    //更新
+    this.update({id: this.$element.get(0).id.match(/_(.+)$/)[1], level: Math.min(indent, 5)});
+
     //将拖动的单个任务移动到占位元素处
     this.$el.find(this.placeholderSelector).replaceWith(this.$element);
   },
@@ -255,6 +259,12 @@ var drapAndDropView = Backbone.View.extend({
         window.scrollBy(0, 6);
       }
     }.bind(this), 1);
+  },
+  //更新任务
+  update: function(props) {
+    var task = new TaskModel();
+    task.url = '/v1/api/tasks/' + props.id;
+    task.save(props);
   },
   render: function(container) {
     var tpl = _.template(this.template)();
