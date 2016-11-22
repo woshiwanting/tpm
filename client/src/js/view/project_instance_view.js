@@ -4,6 +4,7 @@
  */
 
 var projectInstanceTpl = require('../tpl/project_instance.tpl');
+var taskItemTpl = require('../tpl/task_item.tpl');
 
 var TaskModel = require('../model/task_model.js');
 
@@ -25,7 +26,8 @@ var projectInstanceView = Backbone.View.extend({
   render: function() {
     this.model.fetch()
     .then(function(result) {
-      var tpl = _.template(this.template)({taskList: result});
+      var taskListFragment = _.template(taskItemTpl)({taskList: result});
+      var tpl = _.template(this.template)({taskListFragment: taskListFragment});
       this.$el.html(tpl);
     }.bind(this), function(err) {
 

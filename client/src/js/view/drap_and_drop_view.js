@@ -229,8 +229,13 @@ var drapAndDropView = Backbone.View.extend({
       return this.className.match(/(indent_\d+)/g)[0];
     }).addClass(this.indentClass);
 
-    //更新
-    this.update({id: this.$element.get(0).id.match(/_(.+)$/)[1], level: Math.min(indent, 5)});
+    //兼容拖动任务编辑器
+    var $id = this.$element.get(0).id;
+
+    if ($id) {
+      //更新
+      this.update({id: $id.match(/_(.+)$/)[1], level: Math.min(indent, 5)});
+    }
 
     //将拖动的单个任务移动到占位元素处
     this.$el.find(this.placeholderSelector).replaceWith(this.$element);

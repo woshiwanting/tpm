@@ -31,6 +31,8 @@ var addTaskView = Backbone.View.extend({
     this.editorSelector = '.manager';
     //存放编辑器的容器
     this.targetContainer = '#J-taskItem';
+    //根节点样式
+    this.rootClass = 'indent_1';
     //日期选择
     this.dpContainerView = new dpContainerView;
     //拖拽组件
@@ -65,8 +67,19 @@ var addTaskView = Backbone.View.extend({
   //添加单项任务
   addTask: function(e) {
     var $editorInput = $('#J-richtext_editor');
-    var title = $editorInput.text();
+    var content = $editorInput.text();
     var $target = $(e.currentTarget);
+
+    //编辑器前面的节点
+    var $prevEle = null;
+    var $editor = null;
+
+    //编辑器渲染后$container不为空
+    if (this.$container) {
+      $editor = this.$container.find(this.editorSelector);
+      $prevEle = $editor.prev();
+    }
+
     //是否是编辑器的添加任务按钮
     var isEditorSubmit = $target.hasClass('submit_btn');
 
@@ -76,7 +89,7 @@ var addTaskView = Backbone.View.extend({
     }
 
     //还没输入任务内容
-    if (!$.trim(title).length) {
+    if (!$.trim(content).length) {
 
       //点击编辑器的添加任务
       if (isEditorSubmit) {
@@ -87,26 +100,62 @@ var addTaskView = Backbone.View.extend({
       return this.render(this.targetContainer, true);
     }
 
-    //uuid
-    this.$id = Date.now();
-    this.indent = this.getIndent();
-    this.title = title;
-    var taskItemHtml = _.template(taskItemTpl)({title: title, indent: this.indent, id: this.$id});
+    this.indentClass = this.getIndentClass();
+    this.indent = /\d+/.exec(this.indentClass)[0];
+    this.content = content;
+    this.priority = 1;
+
+    if ($prevEle) {
+      var keys = [];
+      var self = this;
+      this.parent = $prevEle.data('key');
+      $editor.prevAll().each(function(k, v) {
+        //过滤掉其他根节点
+        if ($(this).hasClass(self.rootClass) && $(this).next().hasClass(self.rootClass)) {
+          return false;
+        }
+
+        //过滤兄弟节点
+        if (!$(this).hasClass(self.indentClass)) {
+          var key = $(this).data('key');
+
+          if (key) {
+            keys.push(key);
+          }
+        }
+      });
+      this.ancestors = this.parent ? keys : [];
+    }
     
-    this.$container.find(this.editorSelector).before(taskItemHtml);
-
-    this.save();
-
-    isEditorSubmit ? this.replace() : this.render(this.targetContainer, true);
+    this.save()
+    .then(function(result) {
+      var taskItemHtml = _.template(taskItemTpl)({
+        taskList: [{
+          content: result.content,
+          level: result.level,
+          task_id: result.task_id,
+          priority: result.priority
+        }]
+      });
+      this.$id = result.task_id;
+      this.$container.find(this.editorSelector).before(taskItemHtml);
+      isEditorSubmit ? this.replace() : this.render(this.targetContainer, true);
+    }.bind(this))
+    .fail(function(err) {
+      console.log(err);
+    }.bind(this));
   },
   //创建任务
   save: function() {
     var task = new TaskModel({
       level: /\d+/.exec(this.indent)[0],
-      task_id: this.$id,
-      content: this.title
+      content: this.content,
+      priority: this.priority,
+      parent: this.parent,
+      ancestors: this.ancestors
     });
-    task.save();
+
+    return task.save();
   },
   //销毁添加任务编辑器
   destroy: function(e) {
@@ -132,20 +181,20 @@ var addTaskView = Backbone.View.extend({
     this.drapAndDropView.destroy($(this.editorSelector));
     this.$el.find(this.editorSelector).remove();
 
-    var $newTaskItem = this.$el.find('#' + this.$id);
+    var $newTaskItem = this.$el.find('#item_' + this.$id);
     var $placeholder = $(tpl);
     
     $placeholder.removeClass(function() {
       return this.className.match(/(indent_\d+)/g)[0];
-    }).addClass(this.indent);
+    }).addClass(this.indentClass);
 
     $newTaskItem.after($placeholder);
 
     this.$id = null;
-    this.indent = null;
+    this.indentClass = null;
   },
   //获取缩进
-  getIndent: function() {
+  getIndentClass: function() {
     return $(this.editorSelector)[0].className.match(/(indent_\d+)/)[1];
   }
 });

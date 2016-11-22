@@ -10,8 +10,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TaskSchema = new Schema({
-  //任务唯一id
-  task_id: Schema.Types.ObjectId,
+  //任务id
+  task_id: { type: Schema.Types.ObjectId, index: true },
   //任务创建时间
   create_time: { type: Date, default: Date.now },
   //任务更新时间
@@ -26,15 +26,48 @@ var TaskSchema = new Schema({
   assigner: String,
   //任务级别
   level: Number,
+  //优先级
+  priority: Number,
   //任务是否完成
   accomplished: {type: Boolean, default: false},
   //任务是否过期
   overdue: {type: Boolean, default: false}
 });
 
+TaskSchema.add({
+  //添加parent属性，生成Tree结构
+  parent: {
+    type: Schema.Types.ObjectId,
+    set: function(val) {
+      //include val is equal to null
+      if (val === null) {
+        return null;
+      }
+
+      if (typeof(val) === 'object' && val._id) {
+        return val._id;
+      }
+
+      return val;
+    },
+    index: true
+  },
+  //添加ancestors属性，生成Tree结构
+  ancestors: {
+    type: [Schema.Types.ObjectId],
+    set: function(val) {
+      if (val === null) {
+        return '';
+      }
+      return val;
+    }
+  }
+});
+
 TaskSchema.pre('save', function(next) {
-  var now = new Date();
-  this.update_at = now;
+  if (!this.task_id) {
+    this.task_id = new mongoose.Types.ObjectId;
+  }
   next();
 });
 
