@@ -22,7 +22,7 @@ exports.update = function *(next) {
   var body = this.request.body;
   var level = body.level;
 
-  var result = yield Task.update({_id: id}, {level: level});
+  var result = yield Task.update({task_id: id}, {level: level});
   yield this.api(result);
 };
 

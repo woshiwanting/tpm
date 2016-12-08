@@ -1502,6 +1502,11 @@
         }
       }
     },
+    "lodash": {
+      "version": "4.17.2",
+      "from": "lodash@latest",
+      "resolved": "http://registry.npm.taobao.org/lodash/download/lodash-4.17.2.tgz"
+    },
     "mongoose": {
       "version": "4.6.8",
       "from": "mongoose@latest",
