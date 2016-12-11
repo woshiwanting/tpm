@@ -1,38 +1,56 @@
-<div class="full-line"></div>
-<div style="height:500px;" class="main container page-login">
-    <div class="row">
-        <div class="login">
-            <div id="hintBox" class="alert alert-danger alert-dismissable" style="display:none;">
-                <button aria-hidden="true" data-dismiss="alert" type="button" class="close">×</button>
-                <span class="hint-msg"></span>
-            </div>
-            <div class="password">
-                <form method="post" id="loginForm" role="form">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-user"></i>
-                        </span>
-                        <input type="text" name="loginName" autocomplete="off" data-msg="用户名" placeholder="用户名或手机号码" class="form-control input-lg check-null" />
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                        <input type="password" id="input-password" name="password" data-msg="密码" placeholder="密码" autocomplete="off" class="form-control input-lg check-null"/>
-                        <input type="hidden" id="public-key" name="publicKey"/>
-                    </div>
-                    <div class="input-group buttons">
-                        <button type="button" class="btn btn-orange submit-btn">立即登录</button>
-                        <span><a href="/forgot-password">忘记密码？</a></span>
-                    </div>
-                </form>
-                <div class="space1"></div>
-                <h3 class="fast-reg center">
-                    <a href="/register">没有账号？立即注册</a>
-                </h3>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Todoist</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet/less" href="/less/common.less">
+    <link rel="stylesheet/less" href="/less/page/<%=pageName%>.less">
+    <script type="text/javascript" src="/bower_components/less/dist/less.min.js"></script>
+  </head>
+  <body>
+    <div id="content" class="login_singup_form">
+      <div class="content">
+        <form id="login_form" method="post" action="/login">
+          <input type="hidden" name="csrf" value="f2cbbb3526484e17bfa73feb1a83029c">
+          <dl>
+            <dt>电子邮件</dt>
+            <dd>
+              <input type="email" name="email" class="input" id="email" tabindex="1"
+              value="">
+            </dd>
+            <dt>密码</dt>
+            <dd>
+              <input type="password" name="password" class="input" tabindex="2" id="password">
+            </dd>
+            <dd class="submit">
+              <a href="javascript:;" class="amibutton amibutton_red sel_login" tabindex="3" id="submit_button">
+                登录
+              </a>
+              <div class="separator separator_login_page">
+              </div>
+              <span class="desc">
+                <a href="/Users/forgotPassword" tabindex="4" onclick="track('Login', 'ForgotPassword'); return window.GB_show &amp;&amp; GB_show(_('Forgot your password?'), this.href, 200, 450) || true">
+                  忘记密码？
+                </a>
+                <div style="padding-top: 8px">
+                  需要更多的帮助？
+                  <a href="https://support.todoist.com" target="_blank">
+                    联系Todoist技术支持
+                  </a>
+                </div>
+                <div style="padding-top: 8px">
+                  还没有账户？
+                  <a href="/Users/showRegister?success_page=">
+                    <span>花几秒钟时间注册</span>
+                  </a>
+                </div>
+              </span>
+            </dd>
+          </dl>
+        </form>
+      </div>
     </div>
-</div>
-<!-- 待提取，先写在行内，等build部分就绪后迁移 -->
-<script>
-
-</script>
+    <script src="/js/page/login.js"></script>
+  </body>
+</html>

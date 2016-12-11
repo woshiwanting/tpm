@@ -1507,6 +1507,11 @@
       "from": "lodash@latest",
       "resolved": "http://registry.npm.taobao.org/lodash/download/lodash-4.17.2.tgz"
     },
+    "moment": {
+      "version": "2.17.1",
+      "from": "moment@latest",
+      "resolved": "http://registry.npm.taobao.org/moment/download/moment-2.17.1.tgz"
+    },
     "mongoose": {
       "version": "4.6.8",
       "from": "mongoose@latest",
