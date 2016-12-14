@@ -29,6 +29,9 @@
   <div class="history_desc" style="/* display: block; */">
     <ul class="items history" id="project_history"></ul>
   </div>
+  <div style="/* display: block; */">
+      <ul id="project_temp"></ul>
+    </div>
   <div class="controller actions his_ctrl">
     <a href="#" class="action" style="display: none;">获取更多...</a>
   </div>

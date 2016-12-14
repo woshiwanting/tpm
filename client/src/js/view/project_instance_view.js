@@ -26,6 +26,7 @@ var projectInstanceView = Backbone.View.extend({
   render: function() {
     this.model.fetch()
     .then(function(result) {
+
       var taskListFragment = _.template(taskItemTpl)({taskList: result});
       var tpl = _.template(this.template)({taskListFragment: taskListFragment});
       this.$el.html(tpl);

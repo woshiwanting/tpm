@@ -31,7 +31,9 @@ var TaskSchema = new Schema({
   //任务是否完成
   accomplished: {type: Boolean, default: false},
   //任务是否过期
-  overdue: {type: Boolean, default: false}
+  overdue: {type: Boolean, default: false},
+  //该节点的排序
+  sort:Number
 });
 
 TaskSchema.add({

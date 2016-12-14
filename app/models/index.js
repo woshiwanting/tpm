@@ -26,7 +26,5 @@ mongoose.connect(config.db, {
 
 // models
 require('./task');
-require('./user');
 
 exports.Task = mongoose.model('Task');
-exports.User = mongoose.model('User');

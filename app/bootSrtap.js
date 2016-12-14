@@ -58,13 +58,13 @@ var redis = redisStore({
     port: config.redis.port
 });
 
-app.redisIsOk = true;
-redis.on('disconnect',function(){
-    app.redisIsOk = false;
-})
-app.use(session({
-    store: redis
-}));
+app.redisIsOk = false;
+// redis.on('disconnect',function(){
+//     app.redisIsOk = false;
+// })
+// app.use(session({
+//     store: redis
+// }));
 
 
 app.use(function*(next) {

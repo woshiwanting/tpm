@@ -14,6 +14,7 @@ var Task = models.Task;
 //创建并保存一个任务
 exports.newAndSave = function(props) {
   var task = new Task(props);
+  console.log(task)
   // task.parent = props.parent;
   return task.save();
 };

@@ -36,8 +36,19 @@ var TaskModel = Backbone.Model.extend({
       //该节点的排序，渲染的实惠
       sort:1
     }
+  }
+});
+var TaskCollection = Backbone.Collection.extend({
+  model:TaskModel,
+  url: '/v1/api/tasksUpdate',
+  // 将集合中所有模型提交到服务器接口
+  createAll: function(options) {
+    return Backbone.sync.call(this, 'create', this, options);
   },
-  url: '/v1/api/tasks'
+  // 修改集合中的所有模型数据
+  updateAll: function(options) {
+    return Backbone.sync.call(this, 'update', this, options);
+  }
 });
 
-module.exports = TaskModel;
+module.exports = TaskCollection;

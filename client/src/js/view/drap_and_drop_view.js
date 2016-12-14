@@ -5,6 +5,7 @@
 
 var drapAndDropTpl = require('../tpl/drap_and_drop.tpl');
 var TaskModel = require('../model/task_model.js');
+var TaskCollection = require('../model/task_collection.js');
 
 var drapAndDropView = Backbone.View.extend({
   el: '#editor',
@@ -13,7 +14,7 @@ var drapAndDropView = Backbone.View.extend({
     being: false
   },
   events: {
-    'mousedown .drag_and_drop_handler': 'handleMousedown',
+    'mousedown .drag_and_drop_handler': 'domMousedown',
     // 'mouseout .drag_and_drop_handler': 'destroy'
   },
   template: drapAndDropTpl,
@@ -22,254 +23,193 @@ var drapAndDropView = Backbone.View.extend({
     $.extend(this.state, state);
   },
   initialize: function() {
-    this.onDragClass = 'on_drag';
-    this.placeholderSelector = '.drop_item';
-
     //单位缩进量
     this.indentUnit = 28;
 
-    //拖动组件属性
-    this.isXlimit = true; //x方向是否允许出界
-    this.isYlimit = true; //y方向是否允许出界
-    this.minX = ''; //x方向的最小位置
-    this.minY = ''; //y方向的最小位置
-    this.maxX = ''; //x方向的最大位置
-    this.maxY = ''; //y方向的最大位置
   },
   stopPropagation: function(e) {
+    var e = e || window.event;
     e.stopPropagation();
     e.preventDefault();
     return;
   },
-  handleMousedown: function(e) {
-    this.$element = $(e.currentTarget).parent();
-    var className = this.$element.get(0).className;
-
-    this.left = this.$element.offset().left;
-    this.top = this.$element.offset().top;
-    this.x = e.clientX;
-    this.y = e.clientY;
-
-    this.placeholderTpl = '<li class="' + ['drop_item', className].join(' ') + '"></li>'
-
-    this.handleExtraMousedown(e);
-
-    document.onmousemove = $.proxy(this.handleMousemove, this);
-
-    this.stopPropagation(e);
-  },
-  //鼠标按下附加回调
-  handleExtraMousedown: function(e) {
-    var height = this.$element.outerHeight(true);
-    var indent = this.getIndent(this.$element);
-    //占位元素
-    var placeholderEle = $(this.placeholderTpl).css({
-      height: height,
-      marginLeft: Math.max(indent - 1, 0) * this.indentUnit
-    });
-
-    this.$element.addClass(this.onDragClass);
-
-    //添加位置占位
-    this.setMovingElePos(e);
-    this.$element.after(placeholderEle);
-
-    this.handleMouseup();
-  },
-  //设置移动的位置
-  setMovingElePos: function(e) {
-    var e = e || window.event;
-
-    var left = this.left + e.clientX - this.x;
-    var top = this.top + e.clientY - this.y;
-    var eleWidth = this.$element.outerWidth();
-    var eleHeight = this.$element.outerHeight();
-    var pageWidth = $('body').width();
-    var pageHeight = $('body').height();
-
-    var width = this.$element.outerWidth();
-
-    left = this.isXlimit && left < 0 ? 0 : left;
-    left = this.isXlimit && (left > pageWidth - eleWidth) ? (pageWidth - eleWidth) : left;
-
-    left = this.minX !== '' && left < this.minX ? this.minX : left;
-    left = this.maxX !== '' && left > this.maxX ? this.maxX : left;
-
-    top = this.isYlimit && top < 0 ? 0 : top;
-    top = this.isXlimit && (top > pageHeight - eleHeight) ? (pageHeight - eleHeight) : top;
-
-    top = this.minY !== '' && top < this.minY ? this.minY : top;
-    top = this.maxY !== '' && top > this.maxY ? this.maxY : top;
-
-    this.$element.css({
-      visibility: 'visible',
-      zIndex: 1000,
-      opacity: 0.5,
-      position: 'absolute',
-      left: left,
-      top: top,
-      width: width
-    });
-
-    return {
-      left: left,
-      top: top
-    }
-  },
-  handleMousemove: function(e) {
-    var offset = this.setMovingElePos(e);
-
-    this.setPlaceholderIndent(offset);
-    this.updatePlaceholderLevel(offset);
-    // this.handleAutoScroll(e);
-
-    this.handleMouseup();
-    this.stopPropagation(e);
-  },
-  //绑定mouseup
-  handleMouseup: function() {
-    document.onmouseup = function() {
-      document.onmousemove = null;
-
-      clearInterval(this.scroll_interval);
-      this.scroll_interval = null;
-      
-      this.handleMouseupCallback();
-    }.bind(this);
-  },
-  //比较目标元素与最近元素位置，添加占位元素
-  updatePlaceholderLevel: function(self_offset) {
-    var $placeholder = this.$el.find(this.placeholderSelector);
-    var placeholderHeight = $placeholder.outerHeight(true);
-    var placeholder_offset = $placeholder.offset();
-    var itemHeight = 47;
+  //拖动的时候后续的子节点隐藏
+  hideSubDom: function(e){
     var self = this;
-
-    //在placeholder内容区内移动，不重新计算placelholder位置
-    if (placeholder_offset.top + placeholderHeight > self_offset.top 
-      && self_offset.top > placeholder_offset.top) {
-      return;
-    }
-
-    this.$el.find('.task_item').each(function() {
-      var offset = $(this).offset();
-
-      //目标块下边界
-      if (self_offset.top > offset.top && self_offset.top < offset.top + itemHeight) {
-        if ($(this).next(self.placeholderSelector).length) {
-          return;
+    var className = this.$element.get(0).className;
+    var indentClass = className.match(/indent\_[1-5]{1}/ig)[0];
+    var indent = indentClass.split('_')[1]/1;
+    var index = this.$element.index();
+    var $dragElements = [];
+    this.$element.parent().find("li:not(.reorder_item)").each(function(i,ele){
+      if($(ele).data('key')){
+        var _indentClass = ele.className.match(/indent\_[1-5]{1}/ig)[0];
+        var _indent = _indentClass.split('_')[1]/1;
+        if((i+1)>index && _indent>indent){
+          $(ele).addClass('dragSubHidden');
+          $dragElements.push($(ele));
+          $(ele).prependTo(self.project_temp);
+        }else if((i+1) > index && _indent <= indent ){
+          return false;
         }
-        return $(this).after($placeholder);
-      }
-
-      //目标块上边界
-      if (self_offset.top < offset.top && self_offset.top + itemHeight > offset.top) {
-        if ($(this).prev(self.placeholderSelector).length) {
-          return;
-        }
-        return $(this).before($placeholder);
       }
     });
+    this.$dragElements = $dragElements;
   },
-  //返回缩进值
-  getIndent: function($ele) {
-    var indent = +$ele.get(0).className.match(/indent_(\d+)/)[1] || 0;
-    return indent;
+  domMousedown: function(e){
+    var self = this;
+    this.$element = $(e.target || e.srcElement).parents('li');
+    this.project_temp = $('#project_temp');
+    this.indentClass = this.$element.get(0).className.match(/indent\_[0-5]{1}/ig)[0];
+    this.itemIndex = this.$element.index();
+    this.eleHeight = this.$element.height();
+    this.elePageY = this.$element.offset().top;
+    this.elePageX = this.$element.offset().left;
+    this.mouseX = e.pageX;
+    this.mouseY = e.pageY;
+    this.$element.addClass('on_drag').css({
+      left:this.elePageX,
+      top:this.elePageY
+    });
+    this.$ul = this.$el.find('.items');
+    this.$placeholder = $("<li><span></span></li>");
+    this.$placeholder.addClass('drag_item '+this.indentClass).css({
+      height:this.eleHeight+'px'
+    });
+    this.$items = this.$ul.find("li:not(.reorder_item)");
+    this.$placeholder.insertBefore(this.$element);
+    this.hideSubDom(e);
+    document.onmousemove = function(e){
+      self.domMousemove(e);
+    };
+    document.onmouseup = function(){
+      document.onmousemove = null;
+      self.domMouseup();
+    };
+    this.stopPropagation(e);
   },
-  //设置占位元素的缩进量
-  setPlaceholderIndent: function(self_offset) {
-    this.$placeholder = this.$el.find(this.placeholderSelector);
-    this.$prevEle = this.$placeholder.prevAll(':not(.' + this.onDragClass + '):first');
-
-    //当置于顶部时
-    if (!this.$placeholder.prevAll('.task_item:not(.reorder_item)').length) {
-      return this.$placeholder.css('marginLeft', 0);
+  domMousemove: function(e){
+    var self = this;
+    this._elePageX = e.pageX - this.mouseX  + this.elePageX;
+    this._elePageY = e.pageY - this.mouseY  + this.elePageY;
+    this.$element.css({
+      left: this._elePageX,
+      top: this._elePageY
+    });
+    var _insertPlace =-0.5;
+    if(e.pageY < this.mouseY){
+      _insertPlace = 1.5;
     }
 
-    var indent = this.getIndent(this.$prevEle);
+    //获取占位dom的上一个节点
+    var $prev = this.$placeholder.prev();
+    //获取占位dom上一个节点的 indent值
+    var prevIndent = 0;
+    try{
+      prevIndent = parseInt($prev.get(0).className.match(/indent\_[1-5]{1}/ig)[0].split("_")[1],10);
+    }catch(e){
 
-    var prevEle_offset = this.$prevEle.offset();
-    var marginLeft = this.$placeholder.css('marginLeft');
-
-    prevEle_offset.top += parseInt(this.$prevEle.css('padding-top'), 10) || 0;
-    prevEle_offset.left += parseInt(this.$prevEle.css('padding-left'), 10) || 0;
-
-    console.log('self_offset:%s, prevEle_offset:%s', self_offset.left, prevEle_offset.left)
-
-    //与上一级对齐
-    if (self_offset.left == prevEle_offset.left || 
-      (self_offset.left < prevEle_offset.left + this.indentUnit 
-      && self_offset.left + this.indentUnit > prevEle_offset.left)) {
-
-      return this.$placeholder.css('marginLeft', Math.max((indent - 1) * this.indentUnit, 0));
     }
+    //计算出插入位置
+    var insertPlace = parseInt((e.pageY - this.mouseY)/this.eleHeight + this.itemIndex - _insertPlace,10);
+    this.indentPlace = Math.floor((e.pageX - this.mouseX)/this.indentUnit)+parseInt(this.indentClass.split('_')[1]);
+    var pidx = this.$placeholder.index();
+    this.indentPlace = this.indentPlace>5?5:this.indentPlace;
 
-    //相对上一级向右移动一个indent
-    if (self_offset.left >= prevEle_offset.left + this.indentUnit) {
-      return this.$placeholder.css('marginLeft', indent * this.indentUnit);
-    }
-
-    //相对上一级向左移动一个indent
-    if (self_offset.left + this.indentUnit <= prevEle_offset.left) {
-      return this.$placeholder.css('marginLeft',  Math.max((indent - 2) * this.indentUnit, 0));
-    }
-    
-  },
-  //拖动结束及释放鼠标后回调
-  handleMouseupCallback: function() {
-    this.$element.removeClass(this.onDragClass);
-    this.$element.get(0).style = 'opacity:1;visibility: visible';
-    this.$placeholder = this.$placeholder || this.$el.find(this.placeholderSelector);
-
-    var indent = parseInt(this.$placeholder.css('marginLeft'), 10) / this.indentUnit + 1;
-    //样式限制，最多缩进5层
-    this.indentClass= 'indent_' + Math.min(indent, 5);
-
-    this.$element.removeClass(function() {
-      return this.className.match(/(indent_\d+)/g)[0];
-    }).addClass(this.indentClass);
-
-    //兼容拖动任务编辑器
-    var $id = this.$element.get(0).id;
-
-    if ($id) {
-      //更新
-      this.update({id: $id.match(/_(.+)$/)[1], level: Math.min(indent, 5)});
-    }
-
-    //将拖动的单个任务移动到占位元素处
-    this.$el.find(this.placeholderSelector).replaceWith(this.$element);
-  },
-  //自动滚动
-  handleAutoScroll: function(e) {
-    var topBarHeight = $('#top_bar').outerHeight(true);
-    var clientHeight = $(window).height();
-
-    var top = this.$placeholder.offset().top;
-    var height = this.$placeholder.outerHeight(true);
-
-    if (this.scroll_interval) {
-      clearInterval(this.scroll_interval);
-      this.scroll_interval = null;
-    }
-
-    //Positive co-ordinates will scroll to the right and down the page. Negative values will scroll to the left and up the page.
-    this.scroll_interval = setInterval(function() {
-      var scrollTop = $(window).scrollTop();
-      if (top < clientHeight - topBarHeight + scrollTop) {
-        window.scrollBy(0, -6);
+    if(pidx ==1 || pidx ==2){
+      this.indentPlace = 0;
+    }else{
+      if(this.indentPlace > (prevIndent+1) && prevIndent<5){
+        this.indentPlace = prevIndent+1;
       }
+    }
+    if(this.indentPlace <=0){
+      this.indentPlace = 1;
+    }
+    //this.$placeholder.removeClass().addClass('drag_item');
+    //if(this.indentPlace!=0){
+    this.$placeholder.removeClass().addClass("drag_item indent_"+this.indentPlace);
+    //}else{
+    //  this.indentPlace = 1;
+    //}
+    self.dragDomPos(insertPlace);
 
-      if (top + height > clientHeight + scrollTop) {
-        window.scrollBy(0, 6);
+    this.stopPropagation(e);
+  },
+  domMouseup: function(e){
+    var self = this;
+    this.$element.removeClass('on_drag').removeClass(this.indentClass).addClass('indent_'+this.indentPlace).css({
+      left:0,
+      top:0
+    }).insertBefore(this.$placeholder);
+    this.$placeholder.remove();
+    var insertDom = this.$element;
+      //将因为拖拽隐藏的子节点 显示出来
+      // TODO 序列处理 并且发送当前所有节点的排序 到后台
+    //$.each(this.$dragElements,function(i,ele){
+
+    $.each(this.project_temp.find('li'),function(i,ele){
+      var _this = $(ele);
+      var _indent = _this.get(0).className.match(/(indent_\d+)/g)[0];
+      var __indent = parseInt(_indent.split('_')[1]);
+      _this.removeClass(_indent).addClass(function(){
+        var __newIndent = (__indent+(Math.min(self.indentPlace, 5) - parseInt(self.indentClass.split('_')[1])));
+        var _newIndent = __newIndent>5?5:__newIndent;
+        _this.addClass('indent_'+_newIndent);
+        _this.insertAfter(insertDom);
+      });
+      $(ele).removeClass("dragSubHidden");
+    });
+    document.onmouseup = null;
+    this.stopPropagation(e);
+    this.reBuildItemsData(e);
+
+  },
+  //灰色占位节点位置
+  dragDomPos:function(insertPlace){
+    if((insertPlace) < this.$items.length){
+      this.$placeholder.insertBefore(this.$ul.find("li:not(.reorder_item)").eq(insertPlace+1));
+    }else{
+      this.$placeholder.insertAfter(this.$items.eq(this.$items.length-1));
+    }
+  },
+  reBuildItemsData:function(e){
+    var self = this;
+    //拖动完毕后组装数据
+    this.itemsData =  new TaskCollection();
+    this.$ul.find('li:not(.reorder_item)').each(function(i,ele){
+      var id = $(ele).data('key'),
+          indent = parseInt($(ele).get(0).className.match(/(indent_\d+)/g)[0].split('_')[1]),
+          parent = null;
+      if(indent != 1){
+        var t =  $(ele).prevUntil('.indent_'+(indent - 1));
+        if(t.length == 0){
+          parent = $(ele).prev().data('key');
+        }else{
+          parent = t.eq(t.length - 1).prev().data('key');
+        }
       }
-    }.bind(this), 1);
+      console.log( i +":" + parent);
+
+      self.itemsData.push(
+          new TaskModel({
+            sort:i+1,
+            id:id,
+            level:indent,
+            parent:parent
+          })
+      );
+    });
+    self.update(self.itemsData);
   },
   //更新任务
   update: function(props) {
-    var task = new TaskModel();
-    task.url = '/v1/api/tasks/' + props.id;
-    task.save(props);
+    //var task = new TaskModel();
+    //task.url = '/v1/api/tasks/' + props;
+    //task.save(props);
+    this.itemsData.url = '/v1/api/tasksUpdate';
+    //this.itemsData.create();
+    this.itemsData.updateAll();
   },
   render: function(container) {
     var tpl = _.template(this.template)();

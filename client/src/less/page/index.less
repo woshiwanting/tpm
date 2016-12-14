@@ -2659,7 +2659,9 @@ li.current table {
   padding-left: 0 !important;
   padding-right: 0 !important
 }
-
+.task_item.dragSubHidden{
+  display: none;
+}
 .task_item td {
   padding-top: 13px;
   padding-bottom: 13px
@@ -2861,7 +2863,15 @@ textarea,.text_box,.input_due_date,.richtext_editor {
 .dragable {
   cursor: move
 }
-
+#editor .items .drag_item{
+  padding-left: 0;
+}
+#editor .items .drag_item span{
+  display: block;
+  height: 100%;
+  width: 100%;
+  background-color: #f2f2f2 !important;
+}
 #editor .items .indent_2 {
   padding-left: 28px !important
 }
@@ -9647,6 +9657,7 @@ a,.his_ctrl a {
 }
 
 .on_drag {
+  position:absolute;
   padding: 0 !important
 }
 
